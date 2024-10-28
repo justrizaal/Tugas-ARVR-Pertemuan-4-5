@@ -1,0 +1,41 @@
+<html>
+  <head>
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+  </head>
+  <body>
+    <a-scene>
+      <a-assets>
+        <img src="brick/basecolor.png"  id="base">
+        <img src="brick/normal.png" id="normal">
+        <img src="brick/height.png" id="height">
+      </a-assets>
+      <a-box 
+      src="#base"
+      repeat="2 2"
+      normalmap="#normal"
+      segments-height = "100"
+      segments-width = "100"
+      segments-depth = "100"
+      normal-texture-repeat="2 2"
+      displacement-map="#height"
+      displacement-bias="0"
+      displacement-scale="0.1"
+      displacement-texture-repeat="2 2"
+      position="-1 1.5 -2"
+      ></a-box>
+
+      <a-sphere
+      src="#base"
+      normal-map="#normal"
+      normal-texture-repeat="1 1"
+      position="1 1.5 -2"
+      radius="1"
+      ></a-sphere>
+
+
+      </a-scene>
+      
+
+      
+  </body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Joys</title>
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="https://cdn.rawgit.com/mrturck/aframe-joystick/master/joystick.min.js"></script>
+    <style>
+        .button {
+            width: 100px; height: 100px;
+            position: absolute; z-index: 2;
+        }
+    </style>
+</head>
+<body>
+
+    <img id="up" src="images/up.png" class="button" style="bottom: 120px; left: 120px;"/>
+    <img id="down" src="images/down.png" class="button" style="bottom: 10px; left: 120px;"/>
+    <img id="left" src="images/left.png" class="button" style="bottom: 10px; left: 10px;"/>
+    <img id="right" src="images/right.png" class="button" style="bottom: 10px; left: 225px;"/>
+
+    <script>
+        function moveCamera(ev) {
+            let cam = document.querySelector("#camera");
+            let position = cam.getAttribute("position");
+            let camDirection = new THREE.Vector3();
+            
+            cam.object3D.getWorldDirection(camDirection);
+            camDirection.multiplyScalar(0.4); 
+    
+            let sideDirection = new THREE.Vector3(0, 1, 0).cross(camDirection).normalize().multiplyScalar(0.4);
+
+            if (ev.target.id === "up") {
+                console.log(`%cUP`, "font-size:2em;");
+                position.x -= camDirection.x;
+                position.z -= camDirection.z;
+            } else if (ev.target.id === "down") {
+                console.log(`%cDOWN`, "font-size:2em;");
+                position.x += camDirection.x;
+                position.z += camDirection.z;
+            } else if (ev.target.id === "left") {
+                console.log(`%cLEFT`, "font-size:2em;");
+                position.x -= sideDirection.x;
+                position.z -= sideDirection.z;
+            } else if (ev.target.id === "right") {
+                console.log(`%cRIGHT`, "font-size:2em;");
+                position.x += sideDirection.x;
+                position.z += sideDirection.z;
+            }
+
+            cam.setAttribute("position", position);
+        }
+
+        AFRAME.registerComponent("user-control", {
+            init: function () {
+                let buttons = document.querySelectorAll(".button");
+                buttons.forEach(button => {
+                    button.addEventListener("click", moveCamera);
+                    button.addEventListener("touchstart", moveCamera);
+                    button.addEventListener("touchend", function () {
+                        console.log(`%cSTOP`, "font-size:2em; color: red;");
+                    });
+                });
+            }
+        });
+    </script>
+
+
+    <a-scene joystick vr-mode-ui="enabled: false">
+    <a-entity id="camera" camera look-controls wasd-controls position="0 1 3" user-control></a-entity>
+        <a-gltf-model src="pokemonRSE/scene.gltf" ></a-gltf-model>
+
+    </a-scene>
+</body>
+</html>
